@@ -141,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
   generateAdvisors();
   generateExam();
 
+  // 🌟 Recalculate everything after fonts are fully loaded to fix initial width glitches
+  if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+          docTypeSelect.dispatchEvent(new Event('change'));
+          initAutoResize();
+      });
+  }
+
   // 5. Export PDF
   document.getElementById('btn-export').addEventListener('click', async () => {
     document.body.classList.add('exporting');
