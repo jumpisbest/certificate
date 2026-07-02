@@ -1,0 +1,197 @@
+/* 🌟 ใส่หัวเชื้อตรงนี้เพื่อให้ html2canvas รู้จักฟอนต์ 'TH SarabunPSK' ตอนสั่ง Export PDF */
+@font-face {
+  font-family: 'TH SarabunPSK';
+  src: url('THSarabun.ttf') format('truetype'); 
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: url('THSarabun.ttf') format('truetype'); 
+  font-weight: normal;
+  font-style: normal;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+::placeholder {
+  font-family: 'TH SarabunPSK', 'TH Sarabun New', sans-serif !important;
+  color: #999;
+  opacity: 1; /* Firefox */
+}
+
+body {
+  background: #ffffff;
+  font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 24px;
+}
+
+/* ====== Control Panel ====== */
+.control-panel {
+  background: #fff;
+  padding: 15px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  width: 794px;
+  z-index: 100;
+}
+.control-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 16px;
+  font-family: 'Sarabun', sans-serif;
+}
+.control-panel button {
+  padding: 8px 16px;
+  font-size: 15px;
+  font-family: 'Sarabun', sans-serif;
+  background: #1a5276;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.control-panel button:hover { background: #154360; }
+
+/* ====== Page Wrapper ====== */
+.page-wrapper {
+  position: relative;
+  width: 794px;
+  min-height: 1123px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none;
+}
+.page-wrapper.active { display: block; }
+.page-wrapper canvas.pdf-bg { display: block; }
+
+
+/* ====== Input Fields ====== */
+.field {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px dashed #7fb3d3;
+  font-family: 'TH SarabunPSK', 'TH Sarabun New', sans-serif;
+  font-size: 22px;
+  color: #000;
+  outline: none;
+  padding: 0 4px;
+  line-height: 24px !important; 
+  box-sizing: border-box;
+}
+
+.field:focus {
+  border-bottom: 1.5px solid #1a5276;
+  background: rgba(26, 82, 118, 0.06);
+}
+
+.inline-field {
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+}
+
+/* ====== Thai Justification System ====== */
+.thai-justify-container {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', sans-serif;
+    font-size: 22px; 
+    text-align: justify;
+    text-justify: inter-character;
+    line-height: 24px !important;
+}
+
+.thai-word {
+    display: inline;
+    white-space: nowrap;
+}
+
+.thai-justify-container *, .post-committee * {
+  line-height: 24px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: baseline !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* ====== ตอน Export ซ่อนเส้น ====== */
+body.exporting .field, 
+body.exporting .inline-flow-input {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+}
+body.exporting .control-panel {
+  display: none !important;
+}
+
+/* =========================================
+   ====== 🌟 ท่าไม้ตายแก้สระบน/วรรณยุกต์หายตอน Export 🌟 ======
+   ========================================= */
+body.exporting .field,
+body.exporting .inline-flow-input {
+    height: auto !important;          
+    line-height: 1.1 !important;     
+    padding-top: 20px !important;     
+    overflow: visible !important;
+    box-shadow: none !important;
+    margin-top: -20px !important; 
+}
+
+
+/* =======================================================
+   🌟 โซนแก้ไขบั๊กช่องกรอกข้อความไหลแบบ Contenteditable 🌟
+   ======================================================= */
+.inline-flow-input {
+    display: inline !important;
+    position: static !important; /* ปลดล็อกพิกัดตายตัว ให้ไหลตามข้อความตัวหน้า */
+    outline: none;
+    cursor: text;
+    padding: 0 !important;
+    border-bottom: 1.5px dashed #7fb3d3;
+    line-height: 24px !important;
+    box-sizing: border-box;
+    white-space: pre-wrap !important; 
+    word-break: break-all !important; 
+    line-break: anywhere !important; 
+    overflow: visible !important;
+    vertical-align: baseline !important;
+}
+
+/* 🚫 ดักทางทุกเบราว์เซอร์: ห้ามแอบสร้างกล่อง <div> หรือ <p> ซ้อนด้านในเวลาผู้ใช้กด Enter ให้ใช้ระบบไหลต่อเนื่อง */
+.inline-flow-input * {
+    display: inline !important;
+}
+
+/* 💡 เมื่อช่องพิมพ์เรื่องว่างเปล่า ให้กางความกว้างออกเพื่อให้มีเส้นประสำหรับคลิกพิมพ์ได้ */
+.inline-flow-input:empty:not(.auto-width) {
+    display: inline-block !important;
+    min-width: 200px;
+}
+
+.inline-flow-input.auto-width:empty {
+    display: inline-block !important;
+    min-width: auto;
+    cursor: text;
+}
+
+.inline-flow-input:empty::before,
+.inline-flow-input:not(:focus):not(:empty):has(br:only-child)::before {
+    content: attr(data-placeholder);
+    color: #999;
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', sans-serif !important;
+    pointer-events: none;
+}

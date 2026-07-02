@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ใบรับรองวิทยานิพนธ์</title>
+    <link rel="stylesheet" href="style.css?v=5">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="control-panel">
+        <div class="control-group">
+            <label><strong>ประเภทเอกสาร:</strong></label>
+            <select id="docTypeSelect">
+                <option value="วิทยานิพนธ์" selected>วิทยานิพนธ์</option>
+                <option value="ดุษฎีนิพนธ์">ดุษฎีนิพนธ์</option>
+                <option value="การค้นคว้าอิสระ">การค้นคว้าอิสระ</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label><strong>จำนวนที่ปรึกษา:</strong></label>
+            <select id="advisorCount">
+                <option value="1">1 ท่าน</option>
+                <option value="2" selected>2 ท่าน</option>
+                <option value="3">3 ท่าน</option>
+                <option value="4">4 ท่าน</option>
+                <option value="5">5 ท่าน</option>
+                <option value="6">6 ท่าน</option>
+                <option value="7">7 ท่าน</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label><strong>จำนวนกรรมการสอบ:</strong></label>
+            <select id="examCount">
+                <option value="1">1 ท่าน</option>
+                <option value="2">2 ท่าน</option>
+                <option value="3">3 ท่าน</option>
+                <option value="4" selected>4 ท่าน</option>
+                <option value="5">5 ท่าน</option>
+                <option value="6">6 ท่าน</option>
+                <option value="7">7 ท่าน</option>
+            </select>
+        </div>
+        <button id="btn-export">📄 Export PDF</button>
+    </div>
+
+    <div id="page1" class="page-wrapper active">
+        <canvas id="pdf-canvas-1" class="pdf-bg" style="position:absolute; top:0; left:0; width: 100%; height: 100%;"></canvas>
+        
+        <div class="content-layer" style="position:absolute; top:-8px; left:30px; width:100%; height:100%; padding: 195px 80px 60px 80px; box-sizing: border-box; z-index: 10; font-size: 22px;">
+            
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 10px;">
+                <div style="font-size: 27px; font-weight: bold; margin-bottom: 5px;">
+                    ใบรับรอง<input type="text" class="field inline-field text-center bold-field doc-type-input" value="" placeholder="กรอก" style="width: 120px; font-weight: bold; font-size: 27px;">
+                </div>
+                <div style="font-size: 24px; font-weight: bold;">
+                    <input type="text" class="field inline-field text-center bold-subfield" value="" placeholder="กรอก" style="width: 530px; font-weight: bold; font-size: 24px;"><br>
+                    <input type="text" class="field inline-field text-center bold-subfield" value="" placeholder="กรอก" style="width: 450px; font-weight: bold; font-size: 24px; margin-top: 5px;">
+                </div>
+            </div>
+
+            <!-- Thesis Info -->
+            <div style="margin-bottom: 35px; line-height: 32px; padding-left: 20px;">
+                <div style="display: flex; align-items: baseline; margin-bottom: 5px;">
+                    <span style="white-space: nowrap;">ชื่อ<input type="text" class="field inline-field text-center doc-type-input" value="" placeholder="กรอก" style="width: 90px; margin: 0 4px;"> : </span>
+                    <div style="flex: 1; padding-left: 5px;">
+                        <span class="inline-flow-input" contenteditable="true" placeholder="กรอก"></span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: baseline;">
+                    <span style="white-space: nowrap;">ชื่อ–ชื่อสกุลผู้ทำ<input type="text" class="field inline-field text-center doc-type-input" value="" placeholder="กรอก" style="width: 90px; margin: 0 4px;"> : </span>
+                    <input type="text" class="field inline-field" value="" placeholder="กรอก" style="flex: 1; padding-left: 5px; text-align: left;">
+                </div>
+            </div>
+
+            <!-- Committee Layout -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0px; padding: 0 10px;">
+                <!-- Left Column: Advisors -->
+                <div style="width: 48%; text-align: center;">
+                    <div style="margin-bottom: 30px;">
+                        อาจารย์ที่ปรึกษา<input type="text" class="field inline-field text-center doc-type-input" value="" placeholder="กรอก" style="width: 90px;">
+                    </div>
+                    <div id="advisor-container">
+                        <!-- Dynamic Advisor Rows -->
+                    </div>
+                </div>
+                
+                <!-- Right Column: Exam Committee -->
+                <div style="width: 48%; text-align: center;">
+                    <div style="margin-bottom: 30px;">
+                        คณะกรรมการสอบปากเปล่า<input type="text" class="field inline-field text-center doc-type-input" value="" placeholder="กรอก" style="width: 90px;">
+                    </div>
+                    <div id="exam-container">
+                        <!-- Dynamic Exam Rows -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approval Paragraph -->
+            <div class="thai-justify-container" style="text-align: justify; margin-bottom: 35px; line-height: 32px; padding: 0 40px;">
+                <span style="display:inline-block; width: 48px;"></span>มหาวิทยาลัยทักษิณอนุมัติให้รับ<span class="inline-flow-input doc-type-input auto-width" contenteditable="true" data-placeholder="วิทยานิพนธ์" style="display: inline; padding: 0 5px;">วิทยานิพนธ์</span>ฉบับนี้ เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร<span class="inline-flow-input auto-width" contenteditable="true" data-placeholder="ชื่อหลักสูตร" style="display: inline; padding: 0 5px;"></span> สาขาวิชา<span class="inline-flow-input auto-width" contenteditable="true" data-placeholder="ชื่อสาขาวิชา" style="display: inline; padding: 0 5px;"></span> ของมหาวิทยาลัยทักษิณ
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 0px; line-height: 28px;">
+                <div>(อาจารย์ ดร. ศุภชัย สัตยานุรักษ์)</div>
+                <div>คณบดีบัณฑิตวิทยาลัย</div>
+                <div>2568</div>
+                <div>ลิขสิทธิ์ของมหาวิทยาลัยทักษิณ</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
