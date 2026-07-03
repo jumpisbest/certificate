@@ -76,11 +76,11 @@ function getCommitteeStyles() {
     const exmCount = parseInt(document.getElementById('examCount').value) || 1;
     const maxCount = Math.max(advCount, exmCount);
     
-    if (maxCount >= 7) return { margin: '2px', line: '24px' };
-    if (maxCount === 6) return { margin: '8px', line: '24px' };
-    if (maxCount === 5) return { margin: '15px', line: '26px' };
-    if (maxCount === 4) return { margin: '20px', line: '28px' };
-    return { margin: '25px', line: '28px' };
+    if (maxCount >= 7) return { margin: '0px', line: '24px', sigSpace: '20px' };
+    if (maxCount === 6) return { margin: '5px', line: '24px', sigSpace: '25px' };
+    if (maxCount === 5) return { margin: '10px', line: '26px', sigSpace: '30px' };
+    if (maxCount === 4) return { margin: '15px', line: '28px', sigSpace: '40px' };
+    return { margin: '20px', line: '28px', sigSpace: '50px' };
 }
 
 function generateAdvisors() {
@@ -93,7 +93,7 @@ function generateAdvisors() {
         const role = (i === 0) ? "ประธานที่ปรึกษา" : "กรรมการที่ปรึกษา";
         container.innerHTML += `
             <div style="margin-bottom: ${styles.margin}; line-height: ${styles.line};">
-                <div>(<input type="text" class="field inline-field text-center" value="" placeholder="ชื่อ-สกุล" style="width: 250px;">)</div>
+                <div style="margin-top: ${styles.sigSpace};">(<input type="text" class="field inline-field text-center" value="" placeholder="ชื่อ-สกุล" style="width: 250px;">)</div>
                 <div><input type="text" class="field inline-field text-center" value="${role}" style="width: 150px;"></div>
             </div>
         `;
@@ -111,7 +111,7 @@ function generateExam() {
         const role = (i === 0) ? "ประธานกรรมการ" : "กรรมการ";
         container.innerHTML += `
             <div style="margin-bottom: ${styles.margin}; line-height: ${styles.line};">
-                <div>(<input type="text" class="field inline-field text-center" value="" placeholder="ชื่อ-สกุล" style="width: 250px;">)</div>
+                <div style="margin-top: ${styles.sigSpace};">(<input type="text" class="field inline-field text-center" value="" placeholder="ชื่อ-สกุล" style="width: 250px;">)</div>
                 <div><input type="text" class="field inline-field text-center" value="${role}" style="width: 150px;"></div>
             </div>
         `;
@@ -132,8 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
   docTypeSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       document.querySelectorAll('.doc-type-input').forEach(input => {
-          input.value = val;
-          autoResizeInput(input);
+          if (input.tagName.toLowerCase() === 'input') {
+              input.value = val;
+              autoResizeInput(input);
+          } else {
+              input.textContent = val;
+          }
       });
   });
   docTypeSelect.dispatchEvent(new Event('change'));
